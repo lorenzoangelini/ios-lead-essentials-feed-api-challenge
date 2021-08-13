@@ -19,19 +19,22 @@ public final class RemoteFeedLoader: FeedLoader {
 	}
 
 	public func load(completion: @escaping (FeedLoader.Result) -> Void) {
-		client.get(from: url) { result in
+		client.get(from: url) { [weak self] result in
+			guard self != nil else {
+				return
+			}
 			switch result {
 			case let .success((data, response)):
 				completion(FeedLoaderMapper.map(data, from: response))
 
-			case .failure(_):
+			case .failure:
 				completion(.failure(Error.connectivity))
 			}
 		}
 	}
 }
 
-final class FeedLoaderMapper {
+private class FeedLoaderMapper {
 	private struct Root: Codable {
 		let items: [Image]
 		var images: [FeedImage] {
