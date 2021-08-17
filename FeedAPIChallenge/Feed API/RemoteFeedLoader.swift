@@ -55,7 +55,6 @@ private class FeedLoaderMapper {
 		}
 	}
 
-	private static let STATUS_200 = 200
 
 	static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
 		guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
